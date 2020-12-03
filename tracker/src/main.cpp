@@ -38,6 +38,7 @@ void setup()
     delay(10);
     if(!rf95.init()) fault();
     if(!rf95.setFrequency(RF95_FREQ)) fault();
+    rf95.setModemConfig(RH_RF95::Bw500Cr45Sf128);
     rf95.setTxPower(23, false);
     rf95.setThisAddress(ADDRESS);
     rf95.setHeaderFrom(ADDRESS);
