@@ -7,6 +7,7 @@
 
 #include <SPI.h>
 #include <RH_RF95.h>
+#include <RHReliableDatagram.h>
 #define RFM95_CS 8
 #define RFM95_RST 4
 #define RFM95_INT 3
@@ -14,6 +15,7 @@
 #define LED 13
 
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
+RHReliableDatagram rf95_manager(rf95, ADDRESS);
 
 // On fault, hang and blink rapidly.
 void fault()
@@ -40,23 +42,11 @@ void setup()
     if(!rf95.setFrequency(RF95_FREQ)) fault();
     rf95.setModemConfig(RH_RF95::Bw500Cr45Sf128);
     rf95.setTxPower(23, false);
-    rf95.setThisAddress(ADDRESS);
-    rf95.setHeaderFrom(ADDRESS);
+    rf95_manager.setRetries(0);
 }
 
-// In a tight loop, echo all received packets back to the sender.
+// In a tight loop, ack all packets received.
 void loop()
 {
-    if(rf95.available())
-    {
-        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-        uint8_t len = sizeof(buf);
-
-        if(rf95.recv(buf, &len))
-        {
-            rf95.setHeaderTo(rf95.headerFrom());
-            rf95.send(buf, len);
-            rf95.waitPacketSent();
-        }
-    }
+    rf95_manager.recvfromAck(0, 0);
 }
