@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "tracker",
+			"path": "tracker"
+		},
+		{
+			"path": "beacon"
+		},
+		{
+			"name": "mockdata",
+			"path": "mockdata"
+		}
+	],
+	"settings": {}
+}

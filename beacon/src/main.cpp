@@ -91,7 +91,7 @@ void loop()
     {
         // Attempt a ping.
         waittime = micros();
-        success = rf95_manager.sendToWait(0, 0, destination);
+        success = rf95_manager.sendtoWait(0, 0, destination);
         waittime = micros() - waittime;
         rssi = rf95.lastRssi();
 
