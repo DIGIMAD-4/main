@@ -16,6 +16,7 @@
 
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 RHReliableDatagram rf95_manager(rf95, ADDRESS);
+bool ledactive = true;
 
 // On fault, hang and blink rapidly.
 void fault()
@@ -27,6 +28,13 @@ void fault()
         digitalWrite(LED, LOW);
         delay(100);
     }
+}
+
+void toggle()
+{
+    ledactive = !ledactive;
+    if(ledactive) digitalWrite(LED, HIGH);
+    else          digitalWrite(LED, LOW);
 }
 
 // Set up the radio and the addresses.
@@ -48,5 +56,5 @@ void setup()
 // In a tight loop, ack all packets received.
 void loop()
 {
-    rf95_manager.recvfromAck(0, 0);
+    if(rf95_manager.recvfromAck(0, 0)) toggle();
 }
